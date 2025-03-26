@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnMainMultiplicacion: Button
     private lateinit var btnMainDivision: Button
     private lateinit var textViewResultado: TextView
+    private lateinit var operaciones: Operaciones
+    private lateinit var operadores: Operadores
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,60 +41,61 @@ class MainActivity : AppCompatActivity() {
         textViewResultado = findViewById(R.id.textViewResultado)
 
         btnMainSuma.setOnClickListener {
-            funSuma()
+            getValues()
+            suma()
         }
 
         btnMainResta.setOnClickListener {
-            funResta()
+            getValues()
+            resta()
         }
 
         btnMainMultiplicacion.setOnClickListener {
-            funMultiplicacion()
+            getValues()
+            multiplicacion()
         }
 
         btnMainDivision.setOnClickListener {
-            funDivision()
+            getValues()
+            division()
         }
     }
 
-    private fun funSuma(){
+    private fun getValues(){
         val num1 = Integer.parseInt(editTextNum1.text.toString())
         val num2 = Integer.parseInt(editTextNum2.text.toString())
-        val result = num1 + num2
+        operadores = Operadores(num1, num2)
+        operaciones = Operaciones(operadores)
+    }
 
+    private fun suma(){
+        val result = operaciones.suma()
         textViewResultado.text = result.toString()
         textViewResultado.visibility = View.VISIBLE
     }
 
-    private fun funResta(){
-        val num1 = Integer.parseInt(editTextNum1.text.toString())
-        val num2 = Integer.parseInt(editTextNum2.text.toString())
-        val result = num1 - num2
-
+    private fun resta(){
+        val result = operaciones.resta()
         textViewResultado.text = result.toString()
         textViewResultado.visibility = View.VISIBLE
     }
 
-    private fun funMultiplicacion(){
-        val num1 = Integer.parseInt(editTextNum1.text.toString())
-        val num2 = Integer.parseInt(editTextNum2.text.toString())
-        val result = num1 * num2
-
+    private fun multiplicacion(){
+        val result = operaciones.multiplicacion()
         textViewResultado.text = result.toString()
         textViewResultado.visibility = View.VISIBLE
     }
 
-    private fun funDivision(){
-       // val num1 = Integer.parseInt(editTextNum1.text.toString())
-       // val num2 = Integer.parseInt(editTextNum2.text.toString())
-
-        val num1 = editTextNum1.text.toString().toDouble()
-        val num2 = editTextNum2.text.toString().toDouble()
-
-        val result = num1 / num2
-
-        textViewResultado.text = result.toString()
-        textViewResultado.visibility = View.VISIBLE
+    private fun division(){
+        if (operaciones.checkDivision()){
+            val result = operaciones.division()
+            textViewResultado.text = result.toString()
+            textViewResultado.visibility = View.VISIBLE
+        } else {
+            textViewResultado.text = operaciones.getErrorMessage(operaciones.getError())
+            textViewResultado.visibility = View.VISIBLE
+            textViewResultado.textSize = 20F
+        }
     }
 
 
